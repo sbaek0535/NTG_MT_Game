@@ -1,0 +1,350 @@
+/* =========================
+   THEME
+========================= */
+
+:root {
+  --bg: #FFF7B2;
+  --primary: #FFB703;
+  --primary-dark: #F4A261;
+  --card: #ffffff;
+  --text: #222;
+  --red: #E63946;
+  --blue: #457B9D;
+  --shadow: 0 6px 16px rgba(0,0,0,.18);
+}
+
+/* =========================
+   RESET & BASE
+========================= */
+
+* {
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  font-family: 'Pretendard', 'Apple SD Gothic Neo', Arial, sans-serif;
+  color: var(--text);
+  overscroll-behavior: none;
+}
+
+/* 모바일 only */
+@media (min-width: 768px) {
+  body::before {
+    content: "모바일 화면으로 돌려주세요";
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    z-index: 9999;
+  }
+}
+
+/* =========================
+   COMMON
+========================= */
+
+.container {
+  padding: 20px;
+  text-align: center;
+}
+
+button {
+  padding: 16px 26px;
+  border-radius: 14px;
+  border: none;
+  background: var(--primary);
+  font-size: 16px;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform .12s ease;
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+.primary {
+  background: linear-gradient(135deg, #FFB703, #F77F00);
+}
+
+input {
+  width: 80%;
+  max-width: 300px;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  text-align: center;
+  margin: 14px auto;
+  display: block;
+  box-shadow: var(--shadow);
+  font-size: 15px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+  background: linear-gradient(135deg, #FFB703, #FFD166);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+  border-radius: 0 0 18px 18px;
+  text-align: center;
+}
+
+.header .name {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.header .money {
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* =========================
+   CARD / STOCK LIST
+========================= */
+
+.center-box {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+  margin-bottom: 28px;
+}
+
+.stock {
+  padding: 14px 0;
+  border-bottom: 1px dashed #ddd;
+}
+
+.stock:last-child {
+  border-bottom: none;
+}
+
+.stock-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.controls {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.controls button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 20px;
+  padding: 0;
+}
+
+.controls span {
+  min-width: 22px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.invest-amount {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+
+/* =========================
+   LOCK SCREEN
+========================= */
+
+.lock {
+  width: 160px;
+  margin: 50px auto 20px;
+  display: block;
+  animation: float 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+/* =========================
+   RESULT ANIMATION (🔥 핵심)
+========================= */
+
+/* 공통 결과 행 */
+.center-box > div {
+  animation: fadeUp .4s ease forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 수익 (상승) */
+.up,
+[style*="color:#e74c3c"] {
+  color: var(--red);
+  font-weight: 800;
+  animation: gainPulse 1.2s ease infinite;
+}
+
+@keyframes gainPulse {
+  0% {
+    transform: scale(1);
+    text-shadow: 0 0 0 rgba(230,57,70,0);
+  }
+  50% {
+    transform: scale(1.08);
+    text-shadow: 0 0 12px rgba(230,57,70,.6);
+  }
+  100% {
+    transform: scale(1);
+    text-shadow: 0 0 0 rgba(230,57,70,0);
+  }
+}
+
+/* 손실 (하락) */
+.down,
+[style*="color:#3498db"] {
+  color: var(--blue);
+  font-weight: 800;
+  animation: lossShake .6s ease-in-out infinite alternate;
+}
+
+@keyframes lossShake {
+  from { transform: translateX(0); }
+  to { transform: translateX(-3px); }
+}
+
+/* 보합 */
+[style*="color:#565656"] {
+  opacity: .85;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.modal-box {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  width: 80%;
+  max-width: 320px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+.stock {
+  animation: none !important;
+}
+
+/* =========================
+   TRADE FOOTER (매수 화면 하단)
+========================= */
+
+.trade-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.trade-footer .cash {
+  font-size: 17px;
+  font-weight: 800;
+}
+
+/* =========================
+   TRADE FOOTER (매수 화면 하단)
+========================= */
+
+.trade-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.trade-footer .cash {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.trade-footer button {
+  white-space: nowrap;
+}
+
+/* =========================
+   FIX: 매수 단계 리프레시 애니메이션 제거
+========================= */
+.stock {
+  animation: none !important;
+}
+/* =========================
+   TRADE FOOTER (매수 화면 하단)
+========================= */
+
+.trade-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.trade-footer .cash {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.trade-footer button {
+  white-space: nowrap;
+}
+
+/* =========================
+   FIX: 매수 단계 리프레시 애니메이션 제거
+========================= */
+.stock {
+  animation: none !important;
+}
