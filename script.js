@@ -77,7 +77,7 @@ function renderHeader(totalFn = calcTotal, showMoney = true) {
   `;
 }
 
-/* ===== 시작 ===== */
+/* ===== 시작 화면 ===== */
 
 function renderStart() {
   app.innerHTML = `
@@ -143,7 +143,7 @@ function renderTrade() {
       <div class="center-box">${list}</div>
 
       <div class="trade-footer">
-        <div class="cash">보유 현금: ${format(state.cash)}</div>
+        <div class="cash"><b>보유 현금: ${format(state.cash)}</b></div>
         <button class="primary" onclick="confirmPurchase()">매수 확정 ▶</button>
       </div>
     </div>
@@ -154,7 +154,7 @@ function renderTrade() {
 
 function confirmPurchase() {
   if (confirm(`매수를 확정하시겠습니까?\n보유 현금: ${format(state.cash)}`)) {
-    saveState(); // 확정 후 state 저장
+    saveState();
     renderPassword('result');
   }
 }
@@ -225,7 +225,7 @@ function changeQty(id, delta) {
     state.cash += price;
   }
 
-  saveState(); // 상태 저장
+  saveState();
   renderTrade();
 }
 
@@ -257,6 +257,21 @@ function endGame() {
   location.reload();
 }
 
-/* ===== 페이지 로드 시 상태 복원 ===== */
+/* ===== 새로고침 시 상태 복원 ===== */
 loadState();
 renderStart();
+
+/* ===== 줌 방지 기능 ===== */
+
+// 모바일 이미 적용: meta viewport (index.html 확인)
+
+// 데스크톱: Ctrl+휠 / Ctrl+단축키 줌 방지
+window.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && (e.key === '+' || e.key === '-' || e.key === '=')) {
+    e.preventDefault();
+  }
+});
+
+window.addEventListener('wheel', function(e) {
+  if (e.ctrlKey) e.preventDefault();
+}, { passive: false });
