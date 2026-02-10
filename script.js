@@ -24,7 +24,7 @@ const PASSWORDS = [
 
 let state = {
   name: "",
-  round: 0,          // 현재 투자 라운드 (0~4)
+  round: 0,          
   cash: 500000,
   holdings: {},
 };
@@ -35,9 +35,21 @@ const app = document.getElementById("app");
 
 const format = (n) => n.toLocaleString("ko-KR") + "₩";
 
+/* ===== LocalStorage ===== */
+
+function saveState() {
+  localStorage.setItem("gameState", JSON.stringify(state));
+}
+
+function loadState() {
+  const saved = localStorage.getItem("gameState");
+  if (saved) {
+    state = JSON.parse(saved);
+  }
+}
+
 /* ===== 총자산 계산 ===== */
 
-// 일반(투자 전)
 function calcTotal() {
   let total = state.cash;
   STOCKS.forEach(s => {
@@ -46,7 +58,6 @@ function calcTotal() {
   return total;
 }
 
-// 결과 화면 전용 (투자 후)
 function calcResultTotal() {
   let total = state.cash;
   STOCKS.forEach(s => {
@@ -61,22 +72,17 @@ function renderHeader(totalFn = calcTotal, showMoney = true) {
   return `
     <div class="header">
       <div class="name">${state.name}</div>
-      ${
-        showMoney
-          ? `<div class="money">총자산: ${format(totalFn())}</div>`
-          : ``
-      }
+      ${showMoney ? `<div class="money">총자산: ${format(totalFn())}</div>` : ``}
     </div>
   `;
 }
-
 
 /* ===== 시작 ===== */
 
 function renderStart() {
   app.innerHTML = `
     <div class="container">
-      <input id="nameInput" placeholder="팀 이름 입력" />
+      <input id="nameInput" placeholder="팀 이름 입력" value="${state.name}" />
       <button class="primary" onclick="startGame()">시작</button>
     </div>
   `;
@@ -96,35 +102,20 @@ function renderPassword(type) {
       : `게임 진행 후 비밀번호를 통해<br/>투자를 결과를 확인할수 있습니다`;
 
   app.innerHTML = `
-    ${
-  type === "start"
-    ? renderHeader(calcTotal, true)     // 투자 전: 총자산 보임
-    : renderHeader(calcTotal, false)    // 결과 대기: 총자산 숨김
-}
-
+    ${type === "start" ? renderHeader(calcTotal, true) : renderHeader(calcTotal, false)}
     <div class="container">
-      <div style="font-size:24px;font-weight:700;margin-bottom:4px;">
-        ${title}
-      </div>
-
+      <div style="font-size:24px;font-weight:700;margin-bottom:4px;">${title}</div>
       <img src="lock.png" class="lock" />
-
-      <div style="
-        font-size:16px;
-        font-weight:500;
-        margin:10px 0 16px;
-        color:#333;
-      ">
+      <div style="font-size:16px;font-weight:500;margin:10px 0 16px;color:#333;">
         ${guide}
       </div>
-
       <input id="pw" placeholder="비밀번호 입력" />
       <button onclick="checkPassword('${type}')">확인</button>
     </div>
   `;
 }
 
-/* ===== 투자 ===== */
+/* ===== 투자 화면 ===== */
 
 function renderTrade() {
   const list = STOCKS.map(s => {
@@ -141,11 +132,7 @@ function renderTrade() {
             <button onclick="changeQty('${s.id}', 1)">+</button>
           </div>
         </div>
-        ${
-          qty > 0
-            ? `<div class="invest-amount">투자금액: ${format(qty * price)}</div>`
-            : ""
-        }
+        ${qty > 0 ? `<div class="invest-amount">투자금액: ${format(qty * price)}</div>` : ""}
       </div>
     `;
   }).join("");
@@ -155,7 +142,6 @@ function renderTrade() {
     <div class="container">
       <div class="center-box">${list}</div>
 
-      <!-- 매수 하단 영역 -->
       <div class="trade-footer">
         <div class="cash">보유 현금: ${format(state.cash)}</div>
         <button class="primary" onclick="confirmPurchase()">매수 확정 ▶</button>
@@ -164,18 +150,16 @@ function renderTrade() {
   `;
 }
 
-/* =========================
-   CONFIRM PURCHASE
-========================= */
+/* ===== confirm + 매수 확정 ===== */
+
 function confirmPurchase() {
   if (confirm(`매수를 확정하시겠습니까?\n보유 현금: ${format(state.cash)}`)) {
+    saveState(); // 확정 후 state 저장
     renderPassword('result');
   }
 }
 
-
-
-/* ===== 결과 ===== */
+/* ===== 결과 화면 ===== */
 
 function renderResult() {
   const rows = STOCKS.map(s => {
@@ -191,35 +175,17 @@ function renderResult() {
       "#565656";
 
     return `
-      <div style="
-        display:grid;
-        grid-template-columns: 1.2fr 0.8fr 1fr 1fr;
-        padding:10px 0;
-        font-size:16px;
-        font-weight:500;
-        color:#565656;
-      ">
+      <div style="display:grid;grid-template-columns: 1.2fr 0.8fr 1fr 1fr;padding:10px 0;font-size:16px;font-weight:500;color:#565656;">
         <div>${s.id}</div>
         <div>${qty}주</div>
         <div>${format(before)}</div>
-        <div style="color:${color};font-weight:600;">
-          ${format(after)}
-        </div>
+        <div style="color:${color};font-weight:600;">${format(after)}</div>
       </div>
     `;
   }).join("");
 
   const headerRow = `
-    <div style="
-      display:grid;
-      grid-template-columns: 1.2fr 0.8fr 1fr 1fr;
-      font-weight:700;
-      font-size:17px;
-      color:#000;
-      border-bottom:1px solid #ddd;
-      padding-bottom:8px;
-      margin-bottom:6px;
-    ">
+    <div style="display:grid;grid-template-columns: 1.2fr 0.8fr 1fr 1fr;font-weight:700;font-size:17px;color:#000;border-bottom:1px solid #ddd;padding-bottom:8px;margin-bottom:6px;">
       <div>주식명</div>
       <div>구매수</div>
       <div>변동전</div>
@@ -258,15 +224,14 @@ function changeQty(id, delta) {
     state.holdings[id] = curr - 1;
     state.cash += price;
   }
+
+  saveState(); // 상태 저장
   renderTrade();
 }
 
 function checkPassword(type) {
   const pw = document.getElementById("pw").value;
-  const correct =
-    type === "start"
-      ? PASSWORDS[state.round][0]
-      : PASSWORDS[state.round][1];
+  const correct = type === "start" ? PASSWORDS[state.round][0] : PASSWORDS[state.round][1];
 
   if (pw === correct) {
     type === "start" ? renderTrade() : renderResult();
@@ -277,17 +242,21 @@ function checkPassword(type) {
 
 function startGame() {
   state.name = document.getElementById("nameInput").value || "PLAYER";
+  saveState();
   renderPassword("start");
 }
 
 function nextRound() {
   state.round++;
+  saveState();
   renderPassword("start");
 }
 
 function endGame() {
+  localStorage.removeItem("gameState"); // 게임 종료 후 초기화
   location.reload();
 }
 
-/* ===== 시작 ===== */
+/* ===== 페이지 로드 시 상태 복원 ===== */
+loadState();
 renderStart();
