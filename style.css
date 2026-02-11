@@ -348,3 +348,16 @@ input {
 .stock {
   animation: none !important;
 }
+/* =========================
+   ZOOM BLOCK
+========================= */
+
+/* 더블탭 확대 방지 */
+html, body {
+  touch-action: manipulation;
+}
+
+/* iOS 더블탭 확대 방지 */
+* {
+  touch-action: manipulation;
+}
