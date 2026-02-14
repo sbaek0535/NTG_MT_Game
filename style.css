@@ -1,363 +1,341 @@
 /* =========================
-   THEME
+THEME
 ========================= */
 
 :root {
-  --bg: #FFF7B2;
-  --primary: #FFB703;
-  --primary-dark: #F4A261;
-  --card: #ffffff;
-  --text: #222;
-  --red: #E63946;
-  --blue: #457B9D;
-  --shadow: 0 6px 16px rgba(0,0,0,.18);
+--bg: #FFF7B2;
+--primary: #FFB703;
+--primary-dark: #F4A261;
+--card: #ffffff;
+--text: #222;
+--red: #E63946;
+--blue: #457B9D;
+--shadow: 0 6px 16px rgba(0,0,0,.18);
 }
 
 /* =========================
-   RESET & BASE
+RESET & BASE
 ========================= */
 
 * {
   box-sizing: border-box;
   -webkit-user-select: none;
   user-select: none;
-}
+  touch-action: manipulation;
+  }
 
-html, body {
+html, body, #app {
+  height: 100%;
   margin: 0;
   padding: 0;
-  background: var(--bg);
   font-family: 'Pretendard', 'Apple SD Gothic Neo', Arial, sans-serif;
   color: var(--text);
   overscroll-behavior: none;
+
+  /* 🔥 메인 배경 이미지 적용 (public 폴더 기준) */
+  background: url('./배경.png') no-repeat center center;
+  background-size: cover;      /* 화면 꽉 채우기 */
+  background-attachment: fixed; /* 부드러운 고정 배경 */
 }
 
 /* 모바일 only */
 @media (min-width: 768px) {
-  body::before {
-    content: "모바일 화면으로 돌려주세요";
-    position: fixed;
-    inset: 0;
-    background: var(--bg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 22px;
-    z-index: 9999;
-  }
+body::before {
+content: "모바일 화면으로 돌려주세요";
+position: fixed;
+inset: 0;
+background: var(--bg);
+display: flex;
+justify-content: center;
+align-items: center;
+font-size: 22px;
+z-index: 9999;
+}
 }
 
 /* =========================
-   COMMON
+START SCREEN (정중앙)
+========================= */
+
+.start-screen {
+height: 100%;
+display: flex;
+flex-direction: column;
+justify-content: center; /* 세로 정중앙 */
+align-items: center;     /* 가로 정중앙 */
+text-align: center;
+}
+
+/* =========================
+LOGO ANIMATION (낙하 → 둥둥)
+========================= */
+
+.game-logo {
+width: 600px;
+max-width: none;
+height: auto;
+margin-bottom: -70px;
+transform-origin: center;
+
+/* 낙하 후 자동으로 둥둥 애니메이션 연결 */
+animation: logoDrop 0.9s cubic-bezier(.2, .9, .3, 1.2),
+logoFloat 3s ease-in-out infinite 0.9s;
+}
+
+/* 하늘에서 떨어지는 인트로 */
+@keyframes logoDrop {
+0% {
+transform: translateY(-130vh) scale(0.7);
+opacity: 0;
+}
+60% {
+transform: translateY(25px) scale(1.06);
+opacity: 1;
+}
+80% {
+transform: translateY(-10px) scale(0.98);
+}
+100% {
+transform: translateY(0) scale(1);
+}
+}
+
+/* 착지 후 위아래 둥둥 */
+@keyframes logoFloat {
+0% {
+transform: translateY(0);
+}
+50% {
+transform: translateY(-12px);
+}
+100% {
+transform: translateY(0);
+}
+}
+
+/* =========================
+NAME INPUT (확대/축소)
+========================= */
+
+input {
+width: 80%;
+max-width: 300px;
+padding: 14px;
+border-radius: 12px;
+border: none;
+text-align: center;
+margin: 14px auto;
+display: block;
+box-shadow: var(--shadow);
+font-size: 15px;
+}
+
+/* 이름칸 숨쉬기 애니메이션 */
+#nameInput {
+animation: inputPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes inputPulse {
+0% {
+transform: scale(1);
+box-shadow: var(--shadow);
+}
+50% {
+transform: scale(1.06);
+box-shadow: 0 12px 30px rgba(0,0,0,.28);
+}
+100% {
+transform: scale(1);
+box-shadow: var(--shadow);
+}
+}
+
+/* =========================
+COMMON
 ========================= */
 
 .container {
-  padding: 20px;
-  text-align: center;
+padding: 20px;
+text-align: center;
 }
 
 button {
-  padding: 16px 26px;
-  border-radius: 14px;
-  border: none;
-  background: var(--primary);
-  font-size: 16px;
-  font-weight: 700;
-  box-shadow: var(--shadow);
-  cursor: pointer;
-  transition: transform .12s ease;
+padding: 16px 26px;
+border-radius: 14px;
+border: none;
+background: var(--primary);
+font-size: 16px;
+font-weight: 700;
+box-shadow: var(--shadow);
+cursor: pointer;
+transition: transform .12s ease;
 }
 
 button:active {
-  transform: scale(0.96);
+transform: scale(0.96);
 }
 
 .primary {
-  background: linear-gradient(135deg, #FFB703, #F77F00);
-}
-
-input {
-  width: 80%;
-  max-width: 300px;
-  padding: 14px;
-  border-radius: 12px;
-  border: none;
-  text-align: center;
-  margin: 14px auto;
-  display: block;
-  box-shadow: var(--shadow);
-  font-size: 15px;
+background: linear-gradient(135deg, #FFB703, #F77F00);
 }
 
 /* =========================
-   HEADER
+HEADER
 ========================= */
 
 .header {
-  background: linear-gradient(135deg, #FFB703, #FFD166);
-  padding: 18px 20px;
-  box-shadow: var(--shadow);
-  border-radius: 0 0 18px 18px;
-  text-align: center;
+background: linear-gradient(135deg, #FFB703, #FFD166);
+padding: 18px 20px;
+box-shadow: var(--shadow);
+border-radius: 0 0 18px 18px;
+text-align: center;
 }
 
 .header .name {
-  font-size: 22px;
-  font-weight: 800;
+font-size: 22px;
+font-weight: 800;
 }
 
 .header .money {
-  margin-top: 4px;
-  font-size: 15px;
-  font-weight: 700;
+margin-top: 4px;
+font-size: 15px;
+font-weight: 700;
 }
 
 /* =========================
-   CARD / STOCK LIST
+CARD / STOCK LIST
 ========================= */
 
 .center-box {
-  background: var(--card);
-  border-radius: 18px;
-  padding: 18px;
-  box-shadow: var(--shadow);
-  margin-bottom: 28px;
+background: var(--card);
+border-radius: 18px;
+padding: 18px;
+box-shadow: var(--shadow);
+margin-bottom: 28px;
 }
 
 .stock {
-  padding: 14px 0;
-  border-bottom: 1px dashed #ddd;
+padding: 14px 0;
+border-bottom: 1px dashed #ddd;
+animation: none !important;
 }
 
 .stock:last-child {
-  border-bottom: none;
+border-bottom: none;
 }
 
 .stock-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 700;
-  font-size: 15px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+font-weight: 700;
+font-size: 15px;
 }
 
 .controls {
-  display: flex;
-  gap: 14px;
-  align-items: center;
+display: flex;
+gap: 14px;
+align-items: center;
 }
 
 .controls button {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 20px;
-  padding: 0;
+width: 36px;
+height: 36px;
+border-radius: 50%;
+font-size: 20px;
+padding: 0;
 }
 
 .controls span {
-  min-width: 22px;
-  text-align: center;
-  font-weight: 700;
+min-width: 22px;
+text-align: center;
+font-weight: 700;
 }
 
 .invest-amount {
-  margin-top: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #555;
+margin-top: 6px;
+font-size: 13px;
+font-weight: 600;
+color: #555;
 }
 
 /* =========================
-   LOCK SCREEN
+LOCK SCREEN
 ========================= */
 
 .lock {
-  width: 160px;
-  margin: 50px auto 20px;
-  display: block;
-  animation: float 2s ease-in-out infinite;
+width: 160px;
+margin: 50px auto 20px;
+display: block;
+animation: float 2s ease-in-out infinite;
 }
 
 @keyframes float {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-  100% { transform: translateY(0); }
+0% { transform: translateY(0); }
+50% { transform: translateY(-6px); }
+100% { transform: translateY(0); }
 }
 
 /* =========================
-   RESULT ANIMATION (🔥 핵심)
+RESULT ANIMATION
 ========================= */
 
-/* 공통 결과 행 */
 .center-box > div {
-  animation: fadeUp .4s ease forwards;
+animation: fadeUp .4s ease forwards;
 }
 
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+from {
+opacity: 0;
+transform: translateY(10px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
 }
 
-/* 수익 (상승) */
 .up,
 [style*="color:#e74c3c"] {
-  color: var(--red);
-  font-weight: 800;
-  animation: gainPulse 1.2s ease infinite;
+color: var(--red);
+font-weight: 800;
+animation: gainPulse 1.2s ease infinite;
 }
 
 @keyframes gainPulse {
-  0% {
-    transform: scale(1);
-    text-shadow: 0 0 0 rgba(230,57,70,0);
-  }
-  50% {
-    transform: scale(1.08);
-    text-shadow: 0 0 12px rgba(230,57,70,.6);
-  }
-  100% {
-    transform: scale(1);
-    text-shadow: 0 0 0 rgba(230,57,70,0);
-  }
+0% { transform: scale(1); }
+50% { transform: scale(1.08); }
+100% { transform: scale(1); }
 }
 
-/* 손실 (하락) */
 .down,
 [style*="color:#3498db"] {
-  color: var(--blue);
-  font-weight: 800;
-  animation: lossShake .6s ease-in-out infinite alternate;
+color: var(--blue);
+font-weight: 800;
+animation: lossShake .6s ease-in-out infinite alternate;
 }
 
 @keyframes lossShake {
-  from { transform: translateX(0); }
-  to { transform: translateX(-3px); }
-}
-
-/* 보합 */
-[style*="color:#565656"] {
-  opacity: .85;
+from { transform: translateX(0); }
+to { transform: translateX(-3px); }
 }
 
 /* =========================
-   MODAL
-========================= */
-
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.hidden {
-  display: none;
-}
-
-.modal-box {
-  background: white;
-  padding: 20px;
-  border-radius: 16px;
-  width: 80%;
-  max-width: 320px;
-}
-
-.modal-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 16px;
-}
-.stock {
-  animation: none !important;
-}
-
-/* =========================
-   TRADE FOOTER (매수 화면 하단)
+TRADE FOOTER
 ========================= */
 
 .trade-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-top: 12px;
 }
 
 .trade-footer .cash {
-  font-size: 17px;
-  font-weight: 800;
-}
-
-/* =========================
-   TRADE FOOTER (매수 화면 하단)
-========================= */
-
-.trade-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-}
-
-.trade-footer .cash {
-  font-size: 16px;
-  font-weight: 800;
+font-size: 16px;
+font-weight: 800;
 }
 
 .trade-footer button {
-  white-space: nowrap;
-}
-
-/* =========================
-   FIX: 매수 단계 리프레시 애니메이션 제거
-========================= */
-.stock {
-  animation: none !important;
-}
-/* =========================
-   TRADE FOOTER (매수 화면 하단)
-========================= */
-
-.trade-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-}
-
-.trade-footer .cash {
-  font-size: 16px;
-  font-weight: 800;
-}
-
-.trade-footer button {
-  white-space: nowrap;
-}
-
-/* =========================
-   FIX: 매수 단계 리프레시 애니메이션 제거
-========================= */
-.stock {
-  animation: none !important;
-}
-/* =========================
-   ZOOM BLOCK
-========================= */
-
-/* 더블탭 확대 방지 */
-html, body {
-  touch-action: manipulation;
-}
-
-/* iOS 더블탭 확대 방지 */
-* {
-  touch-action: manipulation;
+white-space: nowrap;
 }

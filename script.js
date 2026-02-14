@@ -81,12 +81,16 @@ function renderHeader(totalFn = calcTotal, showMoney = true) {
 
 function renderStart() {
   app.innerHTML = `
-    <div class="container">
+    <div class="start-screen">
+      <img src="게임로고.png" class="game-logo" />
+      
       <input id="nameInput" placeholder="팀 이름 입력" value="${state.name}" />
       <button class="primary" onclick="startGame()">시작</button>
     </div>
   `;
 }
+
+
 
 /* ===== 락 화면 ===== */
 
